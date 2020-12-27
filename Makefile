@@ -5,7 +5,6 @@
 # >> make all	  		=> all source files and creates all executables		#
 # >> make chef 			=> chef and its dependencies						#
 # >> make saladmaker	=> Inode and its dependencies						#
-# >> make whatever		=> only whatever									#
 # >> make clean			=> removes all object and all executable files		#
 #############################################################################
 
@@ -14,27 +13,22 @@ ODIR = ./obj
 BDIR = ./bin
 SDIR = ./src
 CC = gcc
-CFLAGS = -ggdb -Wall -I$(IDIR)
+CFLAGS = -ggdb -Wall -lpthread -I$(IDIR)
 
 
-_DEPS = chef.h saladmaker.h
+_DEPS = utilities.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_SRC = chef.c saladmaker.c
-SRC = $(patsubst %,$(SDIR)/%,$(_SRC))
 
-_OBJ = chef.o saladmaker.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-
-$(ODIR)/%.o: %.c $(DEPS)
+$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 all: chef saladmaker
 
-chef: $(ODIR)/chef.o
+chef: $(ODIR)/chef.o $(ODIR)/utilities.o
 	$(CC) -o $(BDIR)/$@ $^ $(CFLAGS)
 
-saladmaker: $(ODIR)/prime1.o
+saladmaker: $(ODIR)/saladmaker.o $(ODIR)/utilities.o
 	$(CC) -o $(BDIR)/$@ $^ $(CFLAGS)
 
 
